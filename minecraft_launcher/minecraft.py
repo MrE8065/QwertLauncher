@@ -47,11 +47,6 @@ callback = {
     "setDownloadCallback": set_progress_callback
 }
 
-def disable_internal_progress():
-    minecraft_launcher_lib.utils.get_external_progress_bar = lambda: None
-
-disable_internal_progress()
-
 async def install_minecraft(menu_func):
     global downloading
     os.system('cls')
