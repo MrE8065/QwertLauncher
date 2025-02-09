@@ -137,22 +137,41 @@ async def play_mine(menu_func):
     }
 
     versiones = minecraft_launcher_lib.utils.get_installed_versions(MINECRAFT_DIRECTORY)
-    print("\n▨ Versiones instaladas ▨")
-    for version in versiones:
-        print(f"» {version['id']}")
     
-    print("\nSelecciona una versión (o escribe 0 para volver):")
-    version = input('» ')
-    
-    if version == "0":
+    if not versiones:
+        print("No hay versiones instaladas.")
+        time.sleep(1.5)
         await menu_func()
         return
     
-    if minecraft_launcher_lib.utils.is_version_valid(version, MINECRAFT_DIRECTORY):
-        downloading = False
-        subprocess.run(minecraft_launcher_lib.command.get_minecraft_command(version, MINECRAFT_DIRECTORY, options))
+    print("\n▨ Versiones instaladas ▨")
+    for idx, version in enumerate(versiones, start=1):
+        print(f"{idx}) {version['id']}")
+    
+    print("\nSelecciona una versión (o escribe 0 para volver):")
+    seleccion = input('» ')
+    
+    if seleccion == "0":
         await menu_func()
-    else:
-        print("\nERROR: Versión no instalada")
-        time.sleep(1.5)
-        await play_mine(menu_func)
+        return
+    
+    try:
+        seleccion_idx = int(seleccion) - 1
+        if 0 <= seleccion_idx < len(versiones):
+            version = versiones[seleccion_idx]['id']
+            if minecraft_launcher_lib.utils.is_version_valid(version, MINECRAFT_DIRECTORY):
+                downloading = False
+                subprocess.run(minecraft_launcher_lib.command.get_minecraft_command(version, MINECRAFT_DIRECTORY, options))
+                await menu_func()
+            else:
+                print("\nERROR: Versión no válida")
+                await play_mine()
+        else:
+            print("\nERROR: Selección fuera de rango")
+            await play_mine()
+    except ValueError:
+        print("\nERROR: Entrada no válida")
+        await play_mine()
+    
+    time.sleep(1.5)
+    await play_mine(menu_func)
