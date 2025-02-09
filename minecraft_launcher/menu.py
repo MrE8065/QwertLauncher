@@ -1,6 +1,7 @@
 import os
 import time
 import json
+import shutil
 
 from .variables import *
 from .minecraft import install_fabric, install_forge, install_minecraft, play_mine
@@ -97,6 +98,7 @@ Bienvenido a QwertLauncher, {nombre}\n
 ▐Instalar Forge (3)
 ▐Instalar Fabric (4)
 ▐Editar configuración (5)
+▐Borrar todos los datos (6)
 ▐---------------------------
 ▐Salir (0)
 ''')
@@ -112,6 +114,8 @@ Bienvenido a QwertLauncher, {nombre}\n
         await install_fabric(menu_I)
     if select == '5':
         await cambiar_config()
+    if select == '6':
+        await borrar_datos()
     if select == "0":
         os.system('cls' if os.name == 'nt' else 'clear')
         time.sleep(0.5)
@@ -159,3 +163,37 @@ async def cambiar_config():
             print("Opción no válida. Por favor, elige entre Nombre o RAM.")
             time.sleep(1.5)
             await cambiar_config()
+            
+async def borrar_datos():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print(" ESTO BORRARÁ TODOS LOS DATOS DE LA CARPETA .minecraft. ¿ESTÁS SEGURO DE ESTO? (y/n)")
+    selec = input("> ")
+    
+    if selec == "y" or "Y":
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print("Eliminando archivos y carpetas")
+        for elemento in os.listdir(MINECRAFT_DIRECTORY):
+            ruta_elemento = os.path.join(MINECRAFT_DIRECTORY, elemento)
+            
+            if elemento == "config.json":
+                continue
+            
+            try:
+                if os.path.isdir(ruta_elemento):
+                    shutil.rmtree(ruta_elemento)
+                else:
+                    os.remove(ruta_elemento)
+            except Exception as e:
+                print(f"Error al eliminar {ruta_elemento}: {e}")
+                
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print("Datos borrados")
+        time.sleep(1.5)
+        await menu_I()
+    elif selec == "n" or "N":
+        await menu_I()
+    else:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print("Opción no válida")
+        time.sleep(1.5)
+        await borrar_datos()
