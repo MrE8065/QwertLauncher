@@ -165,13 +165,13 @@ async def play_mine(menu_func):
                 await menu_func()
             else:
                 print("\nERROR: Versión no válida")
-                await play_mine()
+                await play_mine(menu_func)
         else:
             print("\nERROR: Selección fuera de rango")
-            await play_mine()
+            await play_mine(menu_func)
     except ValueError:
         print("\nERROR: Entrada no válida")
-        await play_mine()
+        await play_mine(menu_func)
     
     time.sleep(1.5)
     await play_mine(menu_func)
