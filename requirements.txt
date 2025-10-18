@@ -1,1 +1,3 @@
-minecraft_launcher_lib
+customtkinter==5.2.2
+minecraft-launcher-lib==7.1
+pillow==12.0.0
