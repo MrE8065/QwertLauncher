@@ -41,39 +41,28 @@ def InstallWindow(app):
   main_frame.place(relx=0.5, rely=0.5, anchor="center")
   
   status_label = ctk.CTkLabel(main_frame, text="Selecciona una versión", font=("Arial", 16))
-  status_label.grid(row=0, column=0, columnspan=3, pady=(0, 10))
+  status_label.grid(row=0, column=0, columnspan=5, pady=(0, 10))
   
   versions = mll.utils.get_available_versions(mll.utils.get_minecraft_directory())
   version_ids = [v["id"] for v in versions]
   version_combobox = ctk.CTkComboBox(main_frame, values=version_ids, width=250, height=50)
-  version_combobox.grid(row=1, column=0, padx=20, pady=(0, 20), sticky="ew", columnspan=2)
+  version_combobox.grid(row=1, column=0, padx=(0, 10), pady=(0, 20), sticky="ew", columnspan=4)
   if version_ids:
     version_combobox.set(version_ids[0])
   
   search_image = ctk.CTkImage(Image.open("assets/search.png"), size=(50, 50))
   search_button = ctk.CTkButton(main_frame, command=search_click, height=50, width=50, font=("Arial", 30), image=search_image, text="")
-  search_button.grid(row=1, column=2, padx=20, pady=(0, 20), sticky="w", columnspan=3)
+  search_button.grid(row=1, column=4, padx=(10, 0), pady=(0, 20))
   
-  #checkbox_fabric = ctk.CTkCheckBox(main_frame, text="Fabric")
-  #checkbox_fabric.grid(row=1, column=0, padx=20, pady=(0, 20), sticky="w")
-  
-  def selection_changed():
+  def selection_changed(sel):
     install_button.configure(state="disabled")
+    selection_var.set(sel.lower())
 
-  selection_var = ctk.StringVar(value="none")
+  selection_var = ctk.StringVar(value="vanilla")
   
-  selection_vanilla = ctk.CTkRadioButton(main_frame, text="Vanilla", variable=selection_var, value="vanilla", command=selection_changed)
-  selection_vanilla.grid(row=2, column=0, padx=10, pady=(0, 20), sticky="ew") 
-  selection_vanilla.select()
+  selection_buttons = ctk.CTkSegmentedButton(main_frame, values=["Vanilla", "Fabric", "Forge", "Neoforge", "Quilt"], command=selection_changed)
+  selection_buttons.grid(row=2, column=0, columnspan=5, padx=0, pady=(0, 20), sticky="ew")
+  selection_buttons.set("Vanilla")
   
-  selection_fabric = ctk.CTkRadioButton(main_frame, text="Fabric", variable=selection_var, value="fabric", command=selection_changed)
-  selection_fabric.grid(row=2, column=1, padx=10, pady=(0, 20), sticky="ew") 
-  
-  #checkbox_forge = ctk.CTkCheckBox(main_frame, text="Forge")
-  #checkbox_forge.grid(row=1, column=1, padx=20, pady=(0, 20), sticky="w")
-  
-  selection_forge = ctk.CTkRadioButton(main_frame, text="Forge", variable=selection_var, value="forge", command=selection_changed)
-  selection_forge.grid(row=2, column=2, padx=10, pady=(0, 20), sticky="ew")
-  
-  install_button = ctk.CTkButton(main_frame, command=download_click, height=50, width=100, text="Descargar versión")
-  install_button.grid(row=3, column=0, columnspan=3, padx=20, pady=(0, 20))
+  install_button = ctk.CTkButton(main_frame, command=download_click, height=50, width=250, text="Descargar versión")
+  install_button.grid(row=3, column=0, columnspan=5, pady=(0, 0))
