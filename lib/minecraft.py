@@ -115,3 +115,11 @@ async def play_mine(version):
   }
   
   subprocess.run(mll.command.get_minecraft_command(version, MINECRAFT_DIRECTORY, options))
+
+def is_valid_version(version: str, type: str):
+  if (type == "vanilla"):
+    valid = mll.utils.is_version_valid(version, mll.utils.get_minecraft_directory())
+    return valid
+  else:
+    valid = mll.mod_loader.get_mod_loader(type).is_minecraft_version_supported(version)
+    return valid
