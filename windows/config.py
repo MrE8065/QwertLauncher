@@ -18,7 +18,6 @@ def ConfigWindow(app):
   window.lift()
   window.focus()
   window.grab_set()
-  window.wm_iconbitmap(bitmap="assets/icon.ico")
   
   username, ram = get_configs()
   
