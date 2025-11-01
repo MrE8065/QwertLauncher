@@ -1,53 +1,57 @@
 import customtkinter as ctk
 from lib.minecraft import get_configs
 
-def ConfigWindow(app):
-  def CenterWindowToDisplay(Screen: ctk.CTkToplevel, width: int, height: int, scale_factor: float = 1.0):
+
+def config_window(app):
+  """Función para crear la ventana de configuración"""
+
+  def center_window_to_display(screen: ctk.CTkToplevel, width: int, height: int, scale_factor: float = 1.0):
     """Centers the window to the main display/monitor"""
-    screen_width = Screen.winfo_screenwidth()
-    screen_height = Screen.winfo_screenheight()
+    screen_width = screen.winfo_screenwidth()
+    screen_height = screen.winfo_screenheight()
     x = int(((screen_width/2) - (width/2)) * scale_factor)
     y = int(((screen_height/2) - (height/1.5)) * scale_factor)
     return f"{width}x{height}+{x}+{y}"
-  
+
   window = ctk.CTkToplevel()
   window.title("Config")
-  window.geometry(CenterWindowToDisplay(app, 600, 400, app._get_window_scaling()))
-  window.resizable(False,False)
+  window.geometry(center_window_to_display(app, 600, 400, app._get_window_scaling()))
+  window.resizable(False, False)
   window.transient(app)
   window.lift()
   window.focus()
   window.grab_set()
-  
+
   username, ram = get_configs()
-  
+
   config_frame = ctk.CTkFrame(window, fg_color="transparent")
   config_frame.place(relx=0.5, rely=0.5, anchor="center")
-  
+
   # RAM texto centrado
   username_text = ctk.CTkLabel(config_frame, text="Nombre de usuario:")
   username_text.pack(pady=(0, 10))
-  
+
   username_input = ctk.CTkEntry(config_frame, placeholder_text="Nombre de usuario", width=250, height=50)
-  
+
   username_input.insert(0, username)
-  
+
   username_input.pack(pady=(0, 20))
-  
+
   # RAM texto centrado
   ram_text = ctk.CTkLabel(config_frame, text="Cantidad de RAM (en GB):")
   ram_text.pack(pady=(0, 10))
-  
+
   # RAM input centrado
   ram_input = ctk.CTkEntry(config_frame, placeholder_text="Cantidad de RAM", width=250, height=50)
-  
+
   ram_input.insert(0, ram)
-  
+
   ram_input.pack(pady=(0, 10))
-  
+
   def save_button_click():
-    print("COnfiguración guardada")
+    """Qué hacer cuando el botón de guardado es pulsado"""
+    print("Configuración guardada")
     window.destroy()
-  
+
   save_button = ctk.CTkButton(config_frame, text="Guardar", command=save_button_click, height=30, width=120)
   save_button.pack(expand=True, pady=(20, 0))
