@@ -1,3 +1,4 @@
+import asyncio
 import minecraft_launcher_lib as mll
 
 
@@ -25,9 +26,11 @@ app.geometry(center_window_to_display(app, 600, 300, app._get_window_scaling()))
 username, _ = get_configs()
 
 
-async def play_button_click():
+def play_button_click():
   """Qué hacer cuando el boton de jugar es pulsado"""
-  await play_mine(version_combobox.get())
+  version = version_combobox.get()
+  asyncio.run(play_mine(version))
+
 
 play_button = ctk.CTkButton(
     app,
