@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from lib.minecraft import get_configs
+from lib.minecraft import get_configs, save_configs
 
 
 def config_window(app):
@@ -50,7 +50,9 @@ def config_window(app):
 
   def save_button_click():
     """Qué hacer cuando el botón de guardado es pulsado"""
+
     print("Configuración guardada")
+    save_configs(nombre=username_input.get(), ram=int(ram_input.get()))
     window.destroy()
 
   save_button = ctk.CTkButton(config_frame, text="Guardar", command=save_button_click, height=30, width=120)
