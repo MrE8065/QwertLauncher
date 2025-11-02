@@ -3,7 +3,7 @@ import json
 import time
 import subprocess
 import minecraft_launcher_lib as mll
-from minecraft_launcher_lib.types import MinecraftOptions
+from minecraft_launcher_lib.types import MinecraftOptions, CallbackDict
 
 import lib.variables as app_vars
 
@@ -122,6 +122,31 @@ async def install_fabric(menu_func):
     print("\nERROR: Versión no soportada por Fabric")
     time.sleep(2)
     await install_fabric(menu_func)
+
+
+def install_version(version: str, release_type: str, callback: CallbackDict):
+  """
+  Instala la versión especificada
+
+  Args:
+    version: Versión a instalar
+    release_type: Tipo de versión (vanilla, fabric, forge, neoforge, quilt)
+    callback: Diccionario con callbacks para progreso (setStatus, setProgress, setMax)
+
+  Returns:
+    Tupla (success: bool, error_msg: str or None)
+  """
+  try:
+    if release_type == "vanilla":
+      mll.install.install_minecraft_version(version, app_vars.MINECRAFT_DIRECTORY, callback=callback)
+    else:
+      loader = mll.mod_loader.get_mod_loader(release_type)
+      loader.install(version, app_vars.MINECRAFT_DIRECTORY, callback=callback)
+
+    return True, None
+
+  except Exception as e:
+    return False, str(e)
 
 
 async def play_mine(version):
