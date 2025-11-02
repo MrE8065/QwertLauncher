@@ -26,6 +26,14 @@ app.title("QwertLauncher")
 app.resizable(False, False)
 app.geometry(center_window_to_display(app, 600, 300, app._get_window_scaling()))
 
+# Si estamos en modo testing, abrir la consola de debug que captura los prints
+if app_vars.IS_TESTING:
+  try:
+    from lib.debug_console import attach_to_app
+    attach_to_app(app)
+  except Exception as e:
+    print(f"Error iniciando consola de debug: {e}")
+
 username, ram = get_configs()
 if not username and not ram:
   print("No se encontraron configuraciones. Mostrando ventana de aviso...")
