@@ -16,7 +16,7 @@ def get_configs():
     file = app_vars.CONFIG_JSON
 
     # Leer y parsear el archivo JSON
-    with open(file, 'r') as file:
+    with open(file, 'r', encoding='utf-8') as file:
       config = json.load(file)
 
     # Obtener los valores
@@ -46,7 +46,7 @@ def save_configs(nombre: str, ram: int):
   }
 
   # Escribir el archivo JSON
-  with open(file, 'w') as file:
+  with open(file, 'w', encoding='utf-8') as file:
     json.dump(config, file, indent=4)
 
 
@@ -125,7 +125,7 @@ async def install_fabric(menu_func):
 
 
 async def play_mine(version):
-  with open(app_vars.CONFIG_JSON, 'r') as file:
+  with open(app_vars.CONFIG_JSON, 'r', encoding='utf-8') as file:
     data = json.load(file)
 
   mine_user = data.get('Nombre', 'Player')
