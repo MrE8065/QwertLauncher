@@ -6,6 +6,7 @@ import customtkinter as ctk
 from PIL import Image
 from windows.config import config_window
 from windows.install import install_window
+from windows.message import messagebox
 from lib.minecraft import get_configs, play_mine
 
 import lib.variables as app_vars
@@ -27,15 +28,13 @@ app.geometry(center_window_to_display(app, 600, 300, app._get_window_scaling()))
 
 username, ram = get_configs()
 if not username and not ram:
-  print("No se encontraron configuraciones, abriendo ventana de configuración...")
-  config_window(app)
-  username, ram = get_configs()
+  print("No se encontraron configuraciones. Mostrando ventana de aviso...")
+  messagebox(app, title="Error!", text="No se encontraron configuraciones para el usuario.\n"
+             "Accede a la ventana de configuración para establecer un nombre de usuario y la RAM asignada.\n"
+             "Cierra y vuelve a abrir el launcher para aplicar los cambios.")
 else:
   print("Configuraciones encontradas")
   print(f"Usuario: {username}, RAM: {ram}GB")
-
-username_var = ctk.StringVar(value=f"Jugando como: {username}")
-ram_var = ctk.StringVar(value=ram)
 
 
 def play_button_click():
@@ -83,7 +82,7 @@ config_image = ctk.CTkImage(Image.open("assets/settings_big.png"), size=(70, 70)
 config_button = ctk.CTkButton(options_frame, text="", image=config_image, anchor="center", command=config_button_click, height=100, width=100)
 config_button.pack(side="left", padx=10, pady=10)
 
-username_text = ctk.CTkLabel(options_frame, textvariable=username_var, font=("Arial", 20))
+username_text = ctk.CTkLabel(options_frame, text=f"Jugando como: {username}", font=("Arial", 20))
 username_text.pack(side="left", expand=True)
 
 
