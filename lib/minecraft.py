@@ -5,13 +5,15 @@ import subprocess
 import minecraft_launcher_lib as mll
 from minecraft_launcher_lib.types import MinecraftOptions
 
-from .variables import *
+import lib.variables as app_vars
 
 
 def get_configs():
+  """Obtener las configuraciones en el archivo config.json"""
+
   try:
     # Obtener la ruta del archivo config
-    file = os.path.join(mll.utils.get_minecraft_directory(), 'config.json')
+    file = app_vars.CONFIG_JSON
 
     # Leer y parsear el archivo JSON
     with open(file, 'r') as file:
@@ -25,10 +27,27 @@ def get_configs():
 
   except FileNotFoundError:
     print("Archivo config no encontrado")
-    return None, None
+    return "", ""
   except json.JSONDecodeError:
     print("Error leyendo el archivo JSON")
-    return None, None
+    return "Error", "Error"
+
+
+def save_configs(nombre: str, ram: int):
+  """Guardar las configuraciones en el archivo config.json"""
+
+  # Obtener la ruta del archivo config
+  file = app_vars.CONFIG_JSON
+
+  # Crear el diccionario de configuraciones
+  config = {
+      'Nombre': nombre,
+      'RAM': ram
+  }
+
+  # Escribir el archivo JSON
+  with open(file, 'w') as file:
+    json.dump(config, file, indent=4)
 
 
 async def install_minecraft(menu_func):
@@ -126,7 +145,7 @@ def is_valid_version(version: str, release_type: str):
   """Comprueba si la versión especificada existe (tanto en vanilla como en mod loaders)"""
 
   if release_type == "vanilla":
-    valid = mll.utils.is_version_valid(version, mll.utils.get_minecraft_directory())
+    valid = mll.utils.is_version_valid(version, app_vars.MINECRAFT_DIRECTORY)
     return valid
   else:
     valid = mll.mod_loader.get_mod_loader(release_type).is_minecraft_version_supported(version)

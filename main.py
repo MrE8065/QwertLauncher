@@ -8,6 +8,8 @@ from windows.config import config_window
 from windows.install import install_window
 from lib.minecraft import get_configs, play_mine
 
+import lib.variables as app_vars
+
 
 def center_window_to_display(screen: ctk.CTk, width: int, height: int, scale_factor: float = 1.0):
   """Centers the window to the main display/monitor"""
@@ -23,7 +25,17 @@ app.title("QwertLauncher")
 app.resizable(False, False)
 app.geometry(center_window_to_display(app, 600, 300, app._get_window_scaling()))
 
-username, _ = get_configs()
+username, ram = get_configs()
+if not username and not ram:
+  print("No se encontraron configuraciones, abriendo ventana de configuración...")
+  config_window(app)
+  username, ram = get_configs()
+else:
+  print("Configuraciones encontradas")
+  print(f"Usuario: {username}, RAM: {ram}GB")
+
+username_var = ctk.StringVar(value=f"Jugando como: {username}")
+ram_var = ctk.StringVar(value=ram)
 
 
 def play_button_click():
@@ -47,7 +59,7 @@ version_frame.pack(pady=10, padx=20, fill="x")
 version_label = ctk.CTkLabel(version_frame, text="Versión para jugar:", font=("Arial", 15))
 version_label.pack(side="left", padx=10)
 
-versions = mll.utils.get_installed_versions(mll.utils.get_minecraft_directory())
+versions = mll.utils.get_installed_versions(app_vars.MINECRAFT_DIRECTORY)
 version_ids = [v["id"] for v in versions]
 version_combobox = ctk.CTkOptionMenu(version_frame, values=version_ids)
 version_combobox.pack(side="right", fill="x", expand=True, padx=10)
@@ -71,7 +83,7 @@ config_image = ctk.CTkImage(Image.open("assets/settings_big.png"), size=(70, 70)
 config_button = ctk.CTkButton(options_frame, text="", image=config_image, anchor="center", command=config_button_click, height=100, width=100)
 config_button.pack(side="left", padx=10, pady=10)
 
-username_text = ctk.CTkLabel(options_frame, text=f"Jugando como: {username}", font=("Arial", 20))
+username_text = ctk.CTkLabel(options_frame, textvariable=username_var, font=("Arial", 20))
 username_text.pack(side="left", expand=True)
 
 
