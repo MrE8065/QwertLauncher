@@ -10,6 +10,7 @@ from windows.message import messagebox
 from lib.minecraft import get_configs, play_mine
 
 import lib.variables as app_vars
+from lib.logger import *
 
 
 def center_window_to_display(screen: ctk.CTk, width: int, height: int, scale_factor: float = 1.0):
@@ -32,17 +33,17 @@ if app_vars.IS_TESTING:
     from lib.debug_console import attach_to_app
     attach_to_app(app)
   except Exception as e:
-    print(f"Error iniciando consola de debug: {e}")
+    show_error(f"Error iniciando consola de debug: {e}")
 
 username, ram = get_configs()
 if not username and not ram:
-  print("No se encontraron configuraciones. Mostrando ventana de aviso...")
+  show_warn("No se encontraron configuraciones. Mostrando ventana de aviso...")
   messagebox(app, title="Error!", text="No se encontraron configuraciones para el usuario.\n"
              "Accede a la ventana de configuración para establecer un nombre de usuario y la RAM asignada.\n"
              "Cierra y vuelve a abrir el launcher para aplicar los cambios.")
 else:
-  print("Configuraciones encontradas")
-  print(f"Usuario: {username}, RAM: {ram}GB")
+  show_success("Configuraciones encontradas")
+  show_info(f"Usuario: {username}, RAM: {ram}GB")
 
 
 def play_button_click():
