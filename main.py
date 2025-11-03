@@ -81,27 +81,16 @@ else:
 options_frame = ctk.CTkFrame(app, fg_color="transparent")
 options_frame.pack(pady=(0, 10), padx=10, fill="x")
 
-
-def config_button_click():
-  """Qué hacer cuando el boton de configuracion es pulsado"""
-  config_window(app)
-
-
 config_image = ctk.CTkImage(Image.open("assets/settings_big.png"), size=(70, 70))
-config_button = ctk.CTkButton(options_frame, text="", image=config_image, anchor="center", command=config_button_click, height=100, width=100)
+config_button = ctk.CTkButton(options_frame, text="", image=config_image, anchor="center", command=lambda: config_window(app), height=100, width=100)
 config_button.pack(side="left", padx=10, pady=10)
 
 username_text = ctk.CTkLabel(options_frame, text=f"Jugando como: {username}", font=("Arial", 20))
 username_text.pack(side="left", expand=True)
 
-
-def install_button_click():
-  """Qué hacer cuando el boton de instalaciones es pulsado"""
-  install_window(app)
-
-
 install_image = ctk.CTkImage(Image.open("assets/download_big.png"), size=(70, 70))
-install_button = ctk.CTkButton(options_frame, text="", image=install_image, anchor="center", command=install_button_click, height=100, width=100)
+install_button = ctk.CTkButton(options_frame, text="", image=install_image, anchor="center",
+                               command=lambda: install_window(app), height=100, width=100)
 install_button.pack(side="right", padx=10, pady=10)
 
 
