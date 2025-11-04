@@ -5,18 +5,15 @@ import uuid
 import minecraft_launcher_lib as mll
 from minecraft_launcher_lib.types import CallbackDict, MinecraftOptions
 
-import lib.variables as app_vars
+from lib.variables import CONFIG_JSON, MINECRAFT_DIRECTORY
 
 
 def get_configs():
   """Obtener las configuraciones en el archivo config.json"""
 
   try:
-    # Obtener la ruta del archivo config
-    file = app_vars.CONFIG_JSON
-
     # Leer y parsear el archivo JSON
-    with open(file, 'r', encoding='utf-8') as file:
+    with open(CONFIG_JSON, 'r', encoding='utf-8') as file:
       config = json.load(file)
 
     # Obtener los valores
@@ -37,7 +34,7 @@ def save_configs(nombre: str, ram: int):
   """Guardar las configuraciones en el archivo config.json"""
 
   # Obtener la ruta del archivo config
-  file = app_vars.CONFIG_JSON
+  file = CONFIG_JSON
 
   # Crear el diccionario de configuraciones
   config = {
@@ -64,10 +61,10 @@ def install_version(version: str, release_type: str, callback: CallbackDict):
   """
   try:
     if release_type == "vanilla":
-      mll.install.install_minecraft_version(version, app_vars.MINECRAFT_DIRECTORY, callback=callback)
+      mll.install.install_minecraft_version(version, MINECRAFT_DIRECTORY, callback=callback)
     else:
       loader = mll.mod_loader.get_mod_loader(release_type)
-      loader.install(version, app_vars.MINECRAFT_DIRECTORY, callback=callback)
+      loader.install(version, MINECRAFT_DIRECTORY, callback=callback)
 
     return True, None
 
@@ -78,7 +75,7 @@ def install_version(version: str, release_type: str, callback: CallbackDict):
 async def play_mine(version):
   """Llama al proceso de inicio del juego"""
 
-  with open(app_vars.CONFIG_JSON, 'r', encoding='utf-8') as file:
+  with open(CONFIG_JSON, 'r', encoding='utf-8') as file:
     data = json.load(file)
 
   mine_user = data.get('Nombre', 'Player')
@@ -91,14 +88,14 @@ async def play_mine(version):
       "jvmArguments": [f"-Xmx{ram}G", f"-Xms{ram}G"],
   }
 
-  subprocess.run(mll.command.get_minecraft_command(version, app_vars.MINECRAFT_DIRECTORY, options), check=True)
+  subprocess.run(mll.command.get_minecraft_command(version, MINECRAFT_DIRECTORY, options), check=True)
 
 
 def is_valid_version(version: str, release_type: str):
   """Comprueba si la versión especificada existe (tanto en vanilla como en mod loaders)"""
 
   if release_type == "vanilla":
-    valid = mll.utils.is_version_valid(version, app_vars.MINECRAFT_DIRECTORY)
+    valid = mll.utils.is_version_valid(version, MINECRAFT_DIRECTORY)
     return valid
   else:
     valid = mll.mod_loader.get_mod_loader(release_type).is_minecraft_version_supported(version)
