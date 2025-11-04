@@ -1,3 +1,4 @@
+import argparse
 import asyncio
 import threading
 
@@ -11,6 +12,14 @@ from lib.minecraft import get_configs, play_mine
 from windows.config import config_window
 from windows.install import install_window
 from windows.message import messagebox
+
+# Crea el parseador de argumentos
+parser = argparse.ArgumentParser(description='QwertLauncher - Un launcher de Minecraft simple')
+parser.add_argument('--debug', action='store_true', help='Activar el modo debug')
+args = parser.parse_args()
+
+# Establece IS_TESTING de acuerdo al argumento --debug
+app_vars.IS_TESTING = args.debug
 
 
 def center_window_to_display(screen: ctk.CTk, width: int, height: int, scale_factor: float = 1.0):
@@ -32,6 +41,7 @@ if app_vars.IS_TESTING:
   try:
     from lib.debug_console import attach_to_app
     attach_to_app(app)
+    show_info("Modo de pruebas activado")
   except Exception as e:
     show_error(f"Error iniciando consola de debug: {e}")
 
