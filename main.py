@@ -1,16 +1,16 @@
 import asyncio
-import minecraft_launcher_lib as mll
-
+import threading
 
 import customtkinter as ctk
+import minecraft_launcher_lib as mll
 from PIL import Image
-from windows.config import config_window
-from windows.install import install_window
-from windows.message import messagebox
-from lib.minecraft import get_configs, play_mine
 
 import lib.variables as app_vars
 from lib.logger import *
+from lib.minecraft import get_configs, play_mine
+from windows.config import config_window
+from windows.install import install_window
+from windows.message import messagebox
 
 
 def center_window_to_display(screen: ctk.CTk, width: int, height: int, scale_factor: float = 1.0):
@@ -46,10 +46,24 @@ else:
   show_info(f"Usuario: {username}, RAM: {ram}GB")
 
 
+def _run_play(version: str):
+  """Ejecuta play_mine en un hilo separado"""
+  try:
+    asyncio.run(play_mine(version))
+  except Exception as e:
+    show_error(f"Error lanzando Minecraft: {e}")
+  finally:
+    # Reactivar el botón desde el hilo principal
+    app.after(0, lambda: play_button.configure(state="normal"))
+
+
 def play_button_click():
   """Qué hacer cuando el boton de jugar es pulsado"""
   version = version_combobox.get()
-  asyncio.run(play_mine(version))
+  # Desactivar el botón mientras se lanza
+  play_button.configure(state="disabled")
+  t = threading.Thread(target=_run_play, args=(version,), daemon=True)
+  t.start()
 
 
 play_button = ctk.CTkButton(
