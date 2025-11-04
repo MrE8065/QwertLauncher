@@ -1,9 +1,11 @@
 import threading
+
 import customtkinter as ctk
 import minecraft_launcher_lib as mll
 from minecraft_launcher_lib.types import CallbackDict
-from lib.minecraft import is_valid_version, install_version
-import lib.variables as app_vars
+
+from lib.minecraft import install_version, is_valid_version
+from lib.variables import MINECRAFT_DIRECTORY
 
 
 def install_window(app):
@@ -104,7 +106,7 @@ def install_window(app):
   status_label = ctk.CTkLabel(main_frame, text="Selecciona una versión", font=("Arial", 16))
   status_label.grid(row=0, column=0, columnspan=4, pady=(0, 10))
 
-  versions = mll.utils.get_available_versions(app_vars.MINECRAFT_DIRECTORY)
+  versions = mll.utils.get_available_versions(MINECRAFT_DIRECTORY)
   version_ids = [v["id"] for v in versions]
   version_combobox = ctk.CTkComboBox(main_frame, values=version_ids, width=250, height=50)
   version_combobox.grid(row=1, column=0, padx=(0, 10), pady=(0, 20), sticky="ew", columnspan=3)
