@@ -2,6 +2,7 @@ import os
 import json
 import time
 import subprocess
+import uuid
 import minecraft_launcher_lib as mll
 from minecraft_launcher_lib.types import MinecraftOptions, CallbackDict
 
@@ -158,12 +159,12 @@ async def play_mine(version):
 
   options: MinecraftOptions = {
       'username': mine_user,
-      'uuid': '',
+      'uuid': str(uuid.uuid4()),  # Durante las pruebas, descubrí que neoforge necesita si o si una uuid. Los demás funcionan sin una
       'token': '',
       "jvmArguments": [f"-Xmx{ram}G", f"-Xms{ram}G"],
   }
 
-  subprocess.run(mll.command.get_minecraft_command(version, app_vars.MINECRAFT_DIRECTORY, options))
+  subprocess.run(mll.command.get_minecraft_command(version, app_vars.MINECRAFT_DIRECTORY, options), check=True)
 
 
 def is_valid_version(version: str, release_type: str):
