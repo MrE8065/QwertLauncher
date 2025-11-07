@@ -12,6 +12,7 @@ from lib.minecraft import get_configs, play_mine
 from windows.config import config_window
 from windows.install import install_window
 from windows.message import messagebox
+from windows.error import error_window
 
 # Crea el parseador de argumentos
 parser = argparse.ArgumentParser(description='QwertLauncher - Un launcher de Minecraft simple')
@@ -62,6 +63,9 @@ def _run_play(version: str):
     asyncio.run(play_mine(version))
   except Exception as e:
     show_error(f"Error lanzando Minecraft: {e}")
+    if not app_vars.IS_TESTING:
+      # Mostrar ventana con el error al lanzar el juego (en caso de no usar el modo debug)
+      error_window(app, e)
   finally:
     # Reactivar el botón desde el hilo principal
     app.after(0, lambda: play_button.configure(state="normal"))
