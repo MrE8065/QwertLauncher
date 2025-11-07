@@ -39,7 +39,7 @@ app.geometry(center_window_to_display(app, 600, 300, app._get_window_scaling()))
 # Si estamos en modo testing, abrir la consola de debug que captura los prints
 if app_vars.IS_TESTING:
   try:
-    from lib.debug_console import attach_to_app
+    from windows.debug_console import attach_to_app
     attach_to_app(app)
     show_info("Modo de pruebas activado")
   except Exception as e:
