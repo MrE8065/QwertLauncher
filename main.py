@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import threading
+from os import path
 
 import customtkinter as ctk
 import minecraft_launcher_lib as mll
@@ -10,9 +11,9 @@ import lib.variables as app_vars
 from lib.logger import *
 from lib.minecraft import get_configs, play_mine
 from windows.config import config_window
+from windows.error import error_window
 from windows.install import install_window
 from windows.message import messagebox
-from windows.error import error_window
 
 # Crea el parseador de argumentos
 parser = argparse.ArgumentParser(description='QwertLauncher - Un launcher de Minecraft simple')
@@ -109,14 +110,20 @@ else:
 options_frame = ctk.CTkFrame(app, fg_color="transparent")
 options_frame.pack(pady=(0, 10), padx=10, fill="x")
 
-config_image = ctk.CTkImage(Image.open("assets/settings_big.png"), size=(70, 70))
+settings = path.abspath(path.dirname(__file__))
+path_to_settings = path.join(settings, "assets/settings_big.png")
+
+config_image = ctk.CTkImage(Image.open(path_to_settings), size=(70, 70))
 config_button = ctk.CTkButton(options_frame, text="", image=config_image, anchor="center", command=lambda: config_window(app), height=100, width=100)
 config_button.pack(side="left", padx=10, pady=10)
 
 username_text = ctk.CTkLabel(options_frame, text=f"Jugando como: {username}", font=("Arial", 20))
 username_text.pack(side="left", expand=True)
 
-install_image = ctk.CTkImage(Image.open("assets/download_big.png"), size=(70, 70))
+download = path.abspath(path.dirname(__file__))
+path_to_download = path.join(download, "assets/download_big.png")
+
+install_image = ctk.CTkImage(Image.open(path_to_download), size=(70, 70))
 install_button = ctk.CTkButton(options_frame, text="", image=install_image, anchor="center",
                                command=lambda: install_window(app), height=100, width=100)
 install_button.pack(side="right", padx=10, pady=10)
