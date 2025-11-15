@@ -2,7 +2,6 @@ logs/
 __pycache__/
 build/
 dist/
-*.spec
 config/
 debug/
 .venv/
