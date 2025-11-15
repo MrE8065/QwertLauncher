@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import threading
 from os import path
+from tkinter import PhotoImage
 
 import customtkinter as ctk
 import minecraft_launcher_lib as mll
@@ -37,6 +38,12 @@ app = ctk.CTk()
 app.title("QwertLauncher")
 app.resizable(False, False)
 app.geometry(center_window_to_display(app, 600, 300, app._get_window_scaling()))
+
+base_path = path.abspath(path.dirname(__file__))
+icon_path = path.join(base_path, "assets", "icon.png")
+icon = PhotoImage(file=icon_path)
+app.wm_iconbitmap()
+app.iconphoto(False, icon)
 
 # Si estamos en modo testing, abrir la consola de debug que captura los prints
 if app_vars.IS_TESTING:

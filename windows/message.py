@@ -1,3 +1,6 @@
+from os import path
+from tkinter import PhotoImage
+
 import customtkinter as ctk
 
 
@@ -19,6 +22,12 @@ def messagebox(master, title='Warning!', text='Placeholder', button_text='OK'):
   message_box.resizable(False, False)
   message_box.attributes('-topmost', True)
   message_box.grab_set()
+
+  base_path = path.abspath(path.join(path.dirname(__file__), ".."))
+  icon_path = path.join(base_path, "assets/icon.png")
+  icon = PhotoImage(file=icon_path)
+  message_box.wm_iconbitmap()
+  message_box.after(300, lambda: message_box.iconphoto(False, icon))
 
   l1 = ctk.CTkLabel(message_box, text=text)
   l1.pack(pady=30)

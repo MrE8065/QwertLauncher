@@ -1,4 +1,8 @@
+from os import path
+from tkinter import PhotoImage
+
 import customtkinter as ctk
+
 from lib.minecraft import get_configs, save_configs
 
 
@@ -21,6 +25,12 @@ def config_window(app):
   window.lift()
   window.focus()
   window.grab_set()
+
+  base_path = path.abspath(path.join(path.dirname(__file__), ".."))
+  icon_path = path.join(base_path, "assets/icon.png")
+  icon = PhotoImage(file=icon_path)
+  window.wm_iconbitmap()
+  window.after(300, lambda: window.iconphoto(False, icon))
 
   username, ram = get_configs()
 
