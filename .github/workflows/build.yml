@@ -1,0 +1,52 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag (ej: v1.0.0)"
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12.8"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller qwertlauncher.spec
+
+      - name: Compress build output
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            zip -r qwertlauncher-linux.zip dist/qwertlauncher
+          else
+            powershell Compress-Archive -Path dist/qwertlauncher -DestinationPath qwertlauncher-windows.zip
+          fi
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          files: |
+            qwertlauncher-linux.zip
+            qwertlauncher-windows.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
