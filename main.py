@@ -26,12 +26,12 @@ app_vars.IS_TESTING = args.debug
 
 
 def center_window_to_display(screen: ctk.CTk, width: int, height: int, scale_factor: float = 1.0):
-  """Centers the window to the main display/monitor"""
-  screen_width = screen.winfo_screenwidth()
-  screen_height = screen.winfo_screenheight()
-  x = int(((screen_width / 2) - (width / 2)) * scale_factor)
-  y = int(((screen_height / 2) - (height / 1.5)) * scale_factor)
-  return f"{width}x{height}+{x}+{y}"
+    """Centers the window to the main display/monitor"""
+    screen_width = screen.winfo_screenwidth()
+    screen_height = screen.winfo_screenheight()
+    x = int(((screen_width / 2) - (width / 2)) * scale_factor)
+    y = int(((screen_height / 2) - (height / 1.5)) * scale_factor)
+    return f"{width}x{height}+{x}+{y}"
 
 
 app = ctk.CTk()
@@ -47,50 +47,50 @@ app.iconphoto(False, icon)
 
 # Si estamos en modo testing, abrir la consola de debug que captura los prints
 if app_vars.IS_TESTING:
-  try:
-    from windows.debug_console import attach_to_app
+    try:
+        from windows.debug_console import attach_to_app
 
-    attach_to_app(app)
-    show_info("Modo de pruebas activado")
-  except Exception as e:
-    show_error(f"Error iniciando consola de debug: {e}")
+        attach_to_app(app)
+        show_info("Modo de pruebas activado")
+    except Exception as e:
+        show_error(f"Error iniciando consola de debug: {e}")
 
 username, ram = get_configs()
 if not username and not ram:
-  show_warn("No se encontraron configuraciones. Mostrando ventana de aviso...")
-  messagebox(
-    app,
-    title="Error!",
-    text="No se encontraron configuraciones para el usuario.\n"
-    "Accede a la ventana de configuración para establecer un nombre de usuario y la RAM asignada.\n"
-    "Cierra y vuelve a abrir el launcher para aplicar los cambios.",
-  )
+    show_warn("No se encontraron configuraciones. Mostrando ventana de aviso...")
+    messagebox(
+        app,
+        title="Error!",
+        text="No se encontraron configuraciones para el usuario.\n"
+        "Accede a la ventana de configuración para establecer un nombre de usuario y la RAM asignada.\n"
+        "Cierra y vuelve a abrir el launcher para aplicar los cambios.",
+    )
 else:
-  show_success("Configuraciones encontradas")
-  show_info(f"Usuario: {username}, RAM: {ram}GB")
+    show_success("Configuraciones encontradas")
+    show_info(f"Usuario: {username}, RAM: {ram}GB")
 
 
 def _run_play(version: str):
-  """Ejecuta play_mine en un hilo separado"""
-  try:
-    asyncio.run(play_mine(version))
-  except Exception as e:
-    show_error(f"Error lanzando Minecraft: {e}")
-    if not app_vars.IS_TESTING:
-      # Mostrar ventana con el error al lanzar el juego (en caso de no usar el modo debug)
-      error_window(app, e)
-  finally:
-    # Reactivar el botón desde el hilo principal
-    app.after(0, lambda: play_button.configure(state="normal"))
+    """Ejecuta play_mine en un hilo separado"""
+    try:
+        asyncio.run(play_mine(version))
+    except Exception as e:
+        show_error(f"Error lanzando Minecraft: {e}")
+        if not app_vars.IS_TESTING:
+            # Mostrar ventana con el error al lanzar el juego (en caso de no usar el modo debug)
+            error_window(app, e)
+    finally:
+        # Reactivar el botón desde el hilo principal
+        app.after(0, lambda: play_button.configure(state="normal"))
 
 
 def play_button_click():
-  """Qué hacer cuando el boton de jugar es pulsado"""
-  version = version_combobox.get()
-  # Desactivar el botón mientras se lanza
-  play_button.configure(state="disabled")
-  t = threading.Thread(target=_run_play, args=(version,), daemon=True)
-  t.start()
+    """Qué hacer cuando el boton de jugar es pulsado"""
+    version = version_combobox.get()
+    # Desactivar el botón mientras se lanza
+    play_button.configure(state="disabled")
+    t = threading.Thread(target=_run_play, args=(version,), daemon=True)
+    t.start()
 
 
 play_button = ctk.CTkButton(app, text="Jugar", command=play_button_click, height=120, font=("Arial", 30))
@@ -107,11 +107,11 @@ version_ids = [v["id"] for v in versions]
 version_combobox = ctk.CTkOptionMenu(version_frame, values=version_ids)
 version_combobox.pack(side="right", fill="x", expand=True, padx=10)
 if version_ids:
-  version_combobox.set(version_ids[0])
-  play_button.configure(state="normal")
+    version_combobox.set(version_ids[0])
+    play_button.configure(state="normal")
 else:
-  version_combobox.set("Sin versiones encontradas")
-  play_button.configure(state="disabled")
+    version_combobox.set("Sin versiones encontradas")
+    play_button.configure(state="disabled")
 
 options_frame = ctk.CTkFrame(app, fg_color="transparent")
 options_frame.pack(pady=(0, 10), padx=10, fill="x")
@@ -131,7 +131,7 @@ path_to_download = path.join(download, "assets/download_big.png")
 
 install_image = ctk.CTkImage(Image.open(path_to_download), size=(70, 70))
 install_button = ctk.CTkButton(
-  options_frame, text="", image=install_image, anchor="center", command=lambda: install_window(app), height=100, width=100
+    options_frame, text="", image=install_image, anchor="center", command=lambda: install_window(app), height=100, width=100
 )
 install_button.pack(side="right", padx=10, pady=10)
 

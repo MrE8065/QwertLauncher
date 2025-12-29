@@ -1,42 +1,42 @@
 def show_error(message: str):
-  """
-  Muestra un mensaje de error.
+    """
+    Muestra un mensaje de error.
 
-  Ejemplo:
+    Ejemplo:
 
-    [ERROR] Algo a ocurrido mal :(
-  """
-  print(f"\u001b[31m[ERROR]:\u001b[0m {message}")
+      [ERROR] Algo a ocurrido mal :(
+    """
+    print(f"\u001b[31m[ERROR]:\u001b[0m {message}")
 
 
 def show_success(message: str):
-  """
-  Muestra un mensaje de éxito.
+    """
+    Muestra un mensaje de éxito.
 
-  Ejemplo:
+    Ejemplo:
 
-    [SUCCESS] El proceso se completó
-  """
-  print(f"\u001b[32m[SUCCESS]:\u001b[0m {message}")
+      [SUCCESS] El proceso se completó
+    """
+    print(f"\u001b[32m[SUCCESS]:\u001b[0m {message}")
 
 
 def show_warn(message: str):
-  """
-  Muestra un mensaje de advertencia.
+    """
+    Muestra un mensaje de advertencia.
 
-  Ejemplo:
+    Ejemplo:
 
-    [WARN] Saltando pasos...
-  """
-  print(f"\u001b[33m[WARN]:\u001b[0m {message}")
+      [WARN] Saltando pasos...
+    """
+    print(f"\u001b[33m[WARN]:\u001b[0m {message}")
 
 
 def show_info(message: str):
-  """
-  Muestra un mensaje de información.
+    """
+    Muestra un mensaje de información.
 
-  Ejemplo:
+    Ejemplo:
 
-    [INFO] Ha pasado algo
-  """
-  print(f"\u001b[34m[INFO]:\u001b[0m {message}")
+      [INFO] Ha pasado algo
+    """
+    print(f"\u001b[34m[INFO]:\u001b[0m {message}")
