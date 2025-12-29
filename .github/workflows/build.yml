@@ -26,7 +26,7 @@ jobs:
         run: uv sync --locked --all-extras --dev
 
       - name: Build with PyInstaller
-        run: pyinstaller qwertlauncher.spec
+        run: uv run pyinstaller qwertlauncher.spec
 
       - name: Compress build
         run: |
