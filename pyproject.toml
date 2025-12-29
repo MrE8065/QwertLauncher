@@ -1,0 +1,15 @@
+[project]
+name = "qwertlauncher"
+version = "1.0.0"
+description = "Launcher personalizado de Minecraft"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "customtkinter==5.2.2",
+    "minecraft-launcher-lib",
+    "pillow==12.0.0",
+    "pyinstaller==6.16.0",
+]
+
+[tool.uv.sources]
+minecraft-launcher-lib = { git = "https://codeberg.org/JakobDev/minecraft-launcher-lib.git" }
