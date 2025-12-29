@@ -17,8 +17,8 @@ from windows.install import install_window
 from windows.message import messagebox
 
 # Crea el parseador de argumentos
-parser = argparse.ArgumentParser(description='QwertLauncher - Un launcher de Minecraft simple')
-parser.add_argument('--debug', action='store_true', help='Activar el modo debug')
+parser = argparse.ArgumentParser(description="QwertLauncher - Un launcher de Minecraft simple")
+parser.add_argument("--debug", action="store_true", help="Activar el modo debug")
 args = parser.parse_args()
 
 # Establece IS_TESTING de acuerdo al argumento --debug
@@ -29,8 +29,8 @@ def center_window_to_display(screen: ctk.CTk, width: int, height: int, scale_fac
   """Centers the window to the main display/monitor"""
   screen_width = screen.winfo_screenwidth()
   screen_height = screen.winfo_screenheight()
-  x = int(((screen_width/2) - (width/2)) * scale_factor)
-  y = int(((screen_height/2) - (height/1.5)) * scale_factor)
+  x = int(((screen_width / 2) - (width / 2)) * scale_factor)
+  y = int(((screen_height / 2) - (height / 1.5)) * scale_factor)
   return f"{width}x{height}+{x}+{y}"
 
 
@@ -49,6 +49,7 @@ app.iconphoto(False, icon)
 if app_vars.IS_TESTING:
   try:
     from windows.debug_console import attach_to_app
+
     attach_to_app(app)
     show_info("Modo de pruebas activado")
   except Exception as e:
@@ -57,9 +58,13 @@ if app_vars.IS_TESTING:
 username, ram = get_configs()
 if not username and not ram:
   show_warn("No se encontraron configuraciones. Mostrando ventana de aviso...")
-  messagebox(app, title="Error!", text="No se encontraron configuraciones para el usuario.\n"
-             "Accede a la ventana de configuración para establecer un nombre de usuario y la RAM asignada.\n"
-             "Cierra y vuelve a abrir el launcher para aplicar los cambios.")
+  messagebox(
+    app,
+    title="Error!",
+    text="No se encontraron configuraciones para el usuario.\n"
+    "Accede a la ventana de configuración para establecer un nombre de usuario y la RAM asignada.\n"
+    "Cierra y vuelve a abrir el launcher para aplicar los cambios.",
+  )
 else:
   show_success("Configuraciones encontradas")
   show_info(f"Usuario: {username}, RAM: {ram}GB")
@@ -88,13 +93,7 @@ def play_button_click():
   t.start()
 
 
-play_button = ctk.CTkButton(
-    app,
-    text="Jugar",
-    command=play_button_click,
-    height=120,
-    font=("Arial", 30)
-)
+play_button = ctk.CTkButton(app, text="Jugar", command=play_button_click, height=120, font=("Arial", 30))
 
 play_button.pack(pady=10, fill="x", padx=10)
 
@@ -131,8 +130,9 @@ download = path.abspath(path.dirname(__file__))
 path_to_download = path.join(download, "assets/download_big.png")
 
 install_image = ctk.CTkImage(Image.open(path_to_download), size=(70, 70))
-install_button = ctk.CTkButton(options_frame, text="", image=install_image, anchor="center",
-                               command=lambda: install_window(app), height=100, width=100)
+install_button = ctk.CTkButton(
+  options_frame, text="", image=install_image, anchor="center", command=lambda: install_window(app), height=100, width=100
+)
 install_button.pack(side="right", padx=10, pady=10)
 
 
