@@ -1,0 +1,82 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build with PyInstaller
+        run: pyinstaller qwertlauncher.spec
+
+      - name: Compress build
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            cd dist
+            zip -r ../qwertlauncher-linux.zip qwertlauncher
+          else
+            powershell Compress-Archive dist/qwertlauncher qwertlauncher-windows.zip
+          fi
+        shell: bash
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ runner.os }}
+          path: "*.zip"
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Validate changelog entry exists
+        run: |
+          if ! grep -q "^## ${{ github.ref_name }}$" CHANGELOG.md; then
+            echo "Version not found in CHANGELOG.md"
+            exit 1
+          fi
+
+      - name: Extract changelog for current version
+        run: |
+          VERSION="${{ github.ref_name }}"
+          sed -n "/^## $VERSION$/,/^## /p" CHANGELOG.md \
+            | sed '1d;$d' > RELEASE_CHANGELOG.md
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          body_path: RELEASE_CHANGELOG.md
+          generate_release_notes: true
+          append_body: true
+          files: |
+            **/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
