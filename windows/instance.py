@@ -9,15 +9,7 @@ import minecraft_launcher_lib as mll
 from windows.message import messagebox
 
 from lib.variables import MINECRAFT_DIRECTORY
-
-
-def center_window_to_display(screen: ctk.CTkToplevel, width: int, height: int, scale_factor: float = 1.0):
-    """Centers the window to the main display/monitor"""
-    screen_width = screen.winfo_screenwidth()
-    screen_height = screen.winfo_screenheight()
-    x = int(((screen_width/2) - (width/2)) * scale_factor)
-    y = int(((screen_height/2) - (height/1.5)) * scale_factor)
-    return f"{width}x{height}+{x}+{y}"
+from lib.helpers import center_window_to_display
 
 
 def instance_window(app):

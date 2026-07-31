@@ -6,20 +6,14 @@ import customtkinter as ctk
 import minecraft_launcher_lib as mll
 from minecraft_launcher_lib.types import CallbackDict
 
+from windows.message import messagebox
+
 from lib.minecraft import install_version, is_valid_version
-from lib.variables import MINECRAFT_DIRECTORY
+from lib.helpers import center_window_to_display
 
 
 def install_window(app):
     """Función para crear la ventana de instalaciones"""
-
-    def center_window_to_display(screen: ctk.CTkToplevel, width: int, height: int, scale_factor: float = 1.0):
-        """Centers the window to the main display/monitor"""
-        screen_width = screen.winfo_screenwidth()
-        screen_height = screen.winfo_screenheight()
-        x = int(((screen_width/2) - (width/2)) * scale_factor)
-        y = int(((screen_height/2) - (height/1.5)) * scale_factor)
-        return f"{width}x{height}+{x}+{y}"
 
     def reset_info():
         status_label.configure(text="Selecciona una versión", text_color="white")
@@ -41,10 +35,10 @@ def install_window(app):
     def on_download_complete(success, error_msg=None):
         """Callback cuando termina la descarga"""
         if success:
-            window.after(0, lambda: status_label.configure(text="¡Instalación completada!", text_color="green"))
+            messagebox(main_frame, title="Éxito", text="Instalación completada con éxito")
             window.after(0, lambda: progress_bar.set(1.0))
         else:
-            window.after(0, lambda: status_label.configure(text=f"Error: {error_msg}", text_color="red"))
+            messagebox(main_frame, title="Éxito", text=f"Error: {error_msg}")
             window.after(0, lambda: progress_bar.grid_remove())
 
         window.after(0, lambda: install_button.configure(state="normal", text="Descargar versión"))
@@ -114,12 +108,11 @@ def install_window(app):
     status_label = ctk.CTkLabel(main_frame, text="Selecciona una versión", font=("Arial", 16))
     status_label.grid(row=0, column=0, columnspan=4, pady=(0, 10))
 
-    versions = mll.utils.get_available_versions(MINECRAFT_DIRECTORY)
+    versions = mll.utils.get_version_list()
     version_ids = [v["id"] for v in versions]
+
     version_combobox = ctk.CTkComboBox(main_frame, values=version_ids, width=250, height=50)
     version_combobox.grid(row=1, column=0, padx=(0, 10), pady=(0, 20), sticky="ew", columnspan=3)
-    if version_ids:
-        version_combobox.set(version_ids[0])
 
     def selection_changed(sel):
         selection_var.set(sel.lower())

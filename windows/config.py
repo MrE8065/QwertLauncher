@@ -5,6 +5,7 @@ import logging
 import customtkinter as ctk
 
 from lib.minecraft import get_configs, save_configs
+from lib.helpers import center_window_to_display
 
 
 logger = logging.getLogger("qwertlauncher")
@@ -12,14 +13,6 @@ logger = logging.getLogger("qwertlauncher")
 
 def config_window(app):
     """Función para crear la ventana de configuración"""
-
-    def center_window_to_display(screen: ctk.CTkToplevel, width: int, height: int, scale_factor: float = 1.0):
-        """Centers the window to the main display/monitor"""
-        screen_width = screen.winfo_screenwidth()
-        screen_height = screen.winfo_screenheight()
-        x = int(((screen_width/2) - (width/2)) * scale_factor)
-        y = int(((screen_height/2) - (height/1.5)) * scale_factor)
-        return f"{width}x{height}+{x}+{y}"
 
     window = ctk.CTkToplevel()
     window.title("Config")

@@ -12,6 +12,7 @@ from PIL import Image
 
 import lib.variables as app_vars
 from lib.minecraft import get_configs, get_last_version, play_mine, save_configs
+from lib.helpers import center_window_to_display
 from windows.config import config_window
 from windows.error import error_window
 from windows.install import install_window
@@ -30,15 +31,6 @@ args = parser.parse_args()
 
 # Establece IS_TESTING de acuerdo al argumento --debug
 app_vars.IS_TESTING = args.debug
-
-
-def center_window_to_display(screen: ctk.CTk, width: int, height: int, scale_factor: float = 1.0):
-    """Centers the window to the main display/monitor"""
-    screen_width = screen.winfo_screenwidth()
-    screen_height = screen.winfo_screenheight()
-    x = int(((screen_width / 2) - (width / 2)) * scale_factor)
-    y = int(((screen_height / 2) - (height / 1.5)) * scale_factor)
-    return f"{width}x{height}+{x}+{y}"
 
 
 app = ctk.CTk()
