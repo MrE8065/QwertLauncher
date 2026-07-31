@@ -3,6 +3,7 @@ import asyncio
 import threading
 from os import path
 from tkinter import PhotoImage
+import json
 
 import customtkinter as ctk
 import minecraft_launcher_lib as mll
@@ -10,10 +11,11 @@ from PIL import Image
 
 import lib.variables as app_vars
 from lib.logger import *
-from lib.minecraft import get_configs, play_mine
+from lib.minecraft import get_configs, get_last_version, play_mine, save_configs
 from windows.config import config_window
 from windows.error import error_window
 from windows.install import install_window
+from windows.instance import instance_window
 from windows.message import messagebox
 
 # Crea el parseador de argumentos
@@ -70,10 +72,10 @@ else:
     show_info(f"Usuario: {username}, RAM: {ram}GB")
 
 
-def _run_play(version: str):
+def _run_play(version: str, game_dir: str | None = None):
     """Ejecuta play_mine en un hilo separado"""
     try:
-        asyncio.run(play_mine(version))
+        asyncio.run(play_mine(version, game_dir=game_dir))
     except Exception as e:
         show_error(f"Error lanzando Minecraft: {e}")
         if not app_vars.IS_TESTING:
@@ -86,10 +88,16 @@ def _run_play(version: str):
 
 def play_button_click():
     """Qué hacer cuando el boton de jugar es pulsado"""
-    version = version_combobox.get()
+    selected_option = version_combobox.get()
+    selected_profile = instance_profiles.get(selected_option, {})
+    selected_version = selected_profile.get("lastVersionId") or selected_option
+    selected_game_dir = selected_profile.get("gameDir")
+
+    save_configs(username, ram, last_version=selected_option)
+
     # Desactivar el botón mientras se lanza
     play_button.configure(state="disabled")
-    t = threading.Thread(target=_run_play, args=(version,), daemon=True)
+    t = threading.Thread(target=_run_play, args=(selected_version, selected_game_dir), daemon=True)
     t.start()
 
 
@@ -104,10 +112,30 @@ version_label.pack(side="left", padx=10)
 
 versions = mll.utils.get_installed_versions(app_vars.MINECRAFT_DIRECTORY)
 version_ids = [v["id"] for v in versions]
+instance_profiles = {}
+
+profiles_path = path.join(app_vars.MINECRAFT_DIRECTORY, "launcher_profiles.json")
+if path.exists(profiles_path):
+    with open(profiles_path, "r", encoding="utf-8") as file:
+        profiles_data = json.load(file)
+        for profile in profiles_data.get("profiles", {}).values():
+            profile_name = profile.get("name")
+            if profile_name:
+                instance_profiles[profile_name] = {
+                    "lastVersionId": profile.get("lastVersionId"),
+                    "gameDir": profile.get("gameDir"),
+                }
+                if profile_name not in version_ids:
+                    version_ids.append(profile_name)
+
 version_combobox = ctk.CTkOptionMenu(version_frame, values=version_ids)
 version_combobox.pack(side="right", fill="x", expand=True, padx=10)
 if version_ids:
-    version_combobox.set(version_ids[0])
+    last_selected_version = get_last_version()
+    if last_selected_version in version_ids:
+        version_combobox.set(last_selected_version)
+    else:
+        version_combobox.set(version_ids[0])
     play_button.configure(state="normal")
 else:
     version_combobox.set("Sin versiones encontradas")
@@ -120,8 +148,8 @@ settings = path.abspath(path.dirname(__file__))
 path_to_settings = path.join(settings, "assets/settings_big.png")
 
 config_image = ctk.CTkImage(Image.open(path_to_settings), size=(70, 70))
-config_button = ctk.CTkButton(options_frame, text="", image=config_image, anchor="center", command=lambda: config_window(app), height=100, width=100)
-config_button.pack(side="left", padx=10, pady=10)
+config_button = ctk.CTkButton(options_frame, text="", image=config_image, anchor="center", command=lambda: config_window(app), height=50, width=50)
+config_button.pack(side="right", padx=10, pady=10)
 
 username_text = ctk.CTkLabel(options_frame, text=f"Jugando como: {username}", font=("Arial", 20))
 username_text.pack(side="left", expand=True)
@@ -131,9 +159,18 @@ path_to_download = path.join(download, "assets/download_big.png")
 
 install_image = ctk.CTkImage(Image.open(path_to_download), size=(70, 70))
 install_button = ctk.CTkButton(
-    options_frame, text="", image=install_image, anchor="center", command=lambda: install_window(app), height=100, width=100
+    options_frame, text="", image=install_image, anchor="center", command=lambda: install_window(app), height=50, width=50
 )
 install_button.pack(side="right", padx=10, pady=10)
+
+instance = path.abspath(path.dirname(__file__))
+path_to_instance = path.join(download, "assets/library_add_big.png")
+
+instance_image = ctk.CTkImage(Image.open(path_to_instance), size=(70, 70))
+instance_button = ctk.CTkButton(
+    options_frame, text="", image=instance_image, anchor="center", command=lambda: instance_window(app), height=50, width=50
+)
+instance_button.pack(side="right", padx=10, pady=10)
 
 
 app.mainloop()

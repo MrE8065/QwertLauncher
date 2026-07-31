@@ -8,41 +8,46 @@ from minecraft_launcher_lib.types import CallbackDict, MinecraftOptions
 from lib.variables import CONFIG_JSON, MINECRAFT_DIRECTORY
 
 
+def get_config_data():
+    """Leer el contenido del archivo config.json si existe."""
+
+    try:
+        with open(CONFIG_JSON, 'r', encoding='utf-8') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}
+    except json.JSONDecodeError:
+        return {}
+
+
 def get_configs():
     """Obtener las configuraciones en el archivo config.json"""
 
-    try:
-        # Leer y parsear el archivo JSON
-        with open(CONFIG_JSON, 'r', encoding='utf-8') as file:
-            config = json.load(file)
+    config = get_config_data()
+    nombre = config.get('Nombre', '')
+    ram = config.get('RAM', '')
 
-        # Obtener los valores
-        nombre = config.get('Nombre', '')
-        ram = config.get('RAM', '')
-
-        return nombre, ram
-
-    except FileNotFoundError:
-        print("Archivo config no encontrado")
-        return "", ""
-    except json.JSONDecodeError:
-        print("Error leyendo el archivo JSON")
-        return "Error", "Error"
+    return nombre, ram
 
 
-def save_configs(nombre: str, ram: int):
+def get_last_version():
+    """Obtener la última versión seleccionada desde el archivo de configuración."""
+
+    config = get_config_data()
+    return config.get('lastVersion', '')
+
+
+def save_configs(nombre: str, ram: int, last_version: str | None = None):
     """Guardar las configuraciones en el archivo config.json"""
 
-    # Obtener la ruta del archivo config
     file = CONFIG_JSON
+    config = get_config_data()
 
-    # Crear el diccionario de configuraciones
-    config = {
-        'Nombre': nombre,
-        'RAM': ram
-    }
+    config['Nombre'] = nombre
+    config['RAM'] = ram
+    if last_version is not None:
+        config['lastVersion'] = last_version
 
-    # Escribir el archivo JSON
     with open(file, 'w', encoding='utf-8') as file:
         json.dump(config, file, indent=4)
 
@@ -72,7 +77,7 @@ def install_version(version: str, release_type: str, callback: CallbackDict):
         return False, str(e)
 
 
-async def play_mine(version):
+async def play_mine(version, game_dir: str | None = None):
     """Llama al proceso de inicio del juego"""
 
     with open(CONFIG_JSON, 'r', encoding='utf-8') as file:
@@ -87,6 +92,9 @@ async def play_mine(version):
         'token': '',
         "jvmArguments": [f"-Xmx{ram}G", f"-Xms{ram}G"],
     }
+
+    if game_dir:
+        options["gameDirectory"] = game_dir
 
     subprocess.run(mll.command.get_minecraft_command(version, MINECRAFT_DIRECTORY, options), check=True)
 
