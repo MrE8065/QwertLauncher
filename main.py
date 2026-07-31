@@ -1,5 +1,4 @@
 import argparse
-import asyncio
 import threading
 from os import path
 import json
@@ -66,7 +65,7 @@ else:
 def _run_play(version: str, game_dir: str | None = None):
     """Ejecuta play_mine en un hilo separado"""
     try:
-        asyncio.run(play_mine(version, game_dir=game_dir))
+        play_mine(version, game_dir=game_dir)
     except Exception as e:
         logger.error("Error lanzando Minecraft: %s", e)
         if not app_vars.IS_TESTING:

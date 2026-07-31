@@ -6,7 +6,7 @@ import customtkinter as ctk
 # https://github.com/TomSchimansky/CustomTkinter/discussions/1820
 
 
-def center_window_to_display(screen: ctk.CTk | ctk.CTkToplevel, width: int, height: int, scale_factor: float = 1.0):
+def center_window_to_display(screen: ctk.CTk | ctk.CTkToplevel, width: int, height: int, scale_factor: float = 1.0) -> str:
     """Centers the window to the main display/monitor"""
     screen_width = screen.winfo_screenwidth()
     screen_height = screen.winfo_screenheight()
@@ -18,7 +18,7 @@ def center_window_to_display(screen: ctk.CTk | ctk.CTkToplevel, width: int, heig
 base_path = path.abspath(path.join(path.dirname(__file__), ".."))
 
 
-def set_icon(window):
+def set_icon(window: ctk.CTk | ctk.CTkToplevel):
     """Establece el icono de la ventana"""
     icon_path = path.join(base_path, "assets", "icon.png")
     icon = PhotoImage(file=icon_path)

@@ -20,7 +20,7 @@ def get_config_data():
         return {}
 
 
-def get_configs():
+def get_configs() -> tuple[str, int]:
     """Obtener las configuraciones en el archivo config.json"""
 
     config = get_config_data()
@@ -30,7 +30,7 @@ def get_configs():
     return nombre, ram
 
 
-def get_last_version():
+def get_last_version() -> str:
     """Obtener la última versión seleccionada desde el archivo de configuración."""
 
     config = get_config_data()
@@ -52,18 +52,8 @@ def save_configs(nombre: str, ram: int, last_version: str | None = None):
         json.dump(config, file, indent=4)
 
 
-def install_version(version: str, release_type: str, callback: CallbackDict):
-    """
-    Instala la versión especificada
-
-    Args:
-      version: Versión a instalar
-      release_type: Tipo de versión (vanilla, fabric, forge, neoforge, quilt)
-      callback: Diccionario con callbacks para progreso (setStatus, setProgress, setMax)
-
-    Returns:
-      Tupla (success: bool, error_msg: str or None)
-    """
+def install_version(version: str, release_type: str, callback: CallbackDict) -> tuple[bool, str | None]:
+    """Instala la versión especificada"""
     try:
         if release_type == "vanilla":
             mll.install.install_minecraft_version(version, MINECRAFT_DIRECTORY, callback=callback)
@@ -77,7 +67,7 @@ def install_version(version: str, release_type: str, callback: CallbackDict):
         return False, str(e)
 
 
-async def play_mine(version, game_dir: str | None = None):
+def play_mine(version: str, game_dir: str | None = None):
     """Llama al proceso de inicio del juego"""
 
     with open(CONFIG_JSON, 'r', encoding='utf-8') as file:
@@ -99,7 +89,7 @@ async def play_mine(version, game_dir: str | None = None):
     subprocess.run(mll.command.get_minecraft_command(version, MINECRAFT_DIRECTORY, options), check=True)
 
 
-def is_valid_version(version: str, release_type: str):
+def is_valid_version(version: str, release_type: str) -> bool:
     """Comprueba si la versión especificada existe (tanto en vanilla como en mod loaders)"""
 
     if release_type == "vanilla":
