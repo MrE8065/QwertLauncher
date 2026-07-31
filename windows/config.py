@@ -1,9 +1,13 @@
 from os import path
 from tkinter import PhotoImage
+import logging
 
 import customtkinter as ctk
 
 from lib.minecraft import get_configs, save_configs
+
+
+logger = logging.getLogger("qwertlauncher")
 
 
 def config_window(app):
@@ -61,7 +65,7 @@ def config_window(app):
     def save_button_click():
         """Qué hacer cuando el botón de guardado es pulsado"""
 
-        print("Configuración guardada")
+        logger.info("Configuración guardada")
         save_configs(nombre=username_input.get(), ram=int(ram_input.get()))
         window.destroy()
 

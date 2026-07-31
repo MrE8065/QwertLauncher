@@ -4,19 +4,24 @@ import threading
 from os import path
 from tkinter import PhotoImage
 import json
+import logging
 
 import customtkinter as ctk
 import minecraft_launcher_lib as mll
 from PIL import Image
 
 import lib.variables as app_vars
-from lib.logger import *
 from lib.minecraft import get_configs, get_last_version, play_mine, save_configs
 from windows.config import config_window
 from windows.error import error_window
 from windows.install import install_window
 from windows.instance import instance_window
 from windows.message import messagebox
+
+# Configura el logger de la app a DEBUG
+logging.basicConfig(format='[%(levelname)s]: %(message)s')
+logger = logging.getLogger("qwertlauncher")
+logger.setLevel(logging.DEBUG)
 
 # Crea el parseador de argumentos
 parser = argparse.ArgumentParser(description="QwertLauncher - Un launcher de Minecraft simple")
@@ -53,13 +58,13 @@ if app_vars.IS_TESTING:
         from windows.debug_console import attach_to_app
 
         attach_to_app(app)
-        show_info("Modo de pruebas activado")
+        logger.info("Modo de pruebas activado")
     except Exception as e:
-        show_error(f"Error iniciando consola de debug: {e}")
+        logger.error("Error iniciando consola de debug: %s", e)
 
 username, ram = get_configs()
 if not username and not ram:
-    show_warn("No se encontraron configuraciones. Mostrando ventana de aviso...")
+    logger.warning("No se encontraron configuraciones. Mostrando ventana de aviso...")
     messagebox(
         app,
         title="Error!",
@@ -68,8 +73,7 @@ if not username and not ram:
         "Cierra y vuelve a abrir el launcher para aplicar los cambios.",
     )
 else:
-    show_success("Configuraciones encontradas")
-    show_info(f"Usuario: {username}, RAM: {ram}GB")
+    logger.info("Usuario: %s, RAM: %sGB", username, ram)
 
 
 def _run_play(version: str, game_dir: str | None = None):
@@ -77,7 +81,7 @@ def _run_play(version: str, game_dir: str | None = None):
     try:
         asyncio.run(play_mine(version, game_dir=game_dir))
     except Exception as e:
-        show_error(f"Error lanzando Minecraft: {e}")
+        logger.error("Error lanzando Minecraft: %s", e)
         if not app_vars.IS_TESTING:
             # Mostrar ventana con el error al lanzar el juego (en caso de no usar el modo debug)
             error_window(app, e)
