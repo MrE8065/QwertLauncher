@@ -1,6 +1,4 @@
 import threading
-from os import path
-from tkinter import PhotoImage
 
 import customtkinter as ctk
 import minecraft_launcher_lib as mll
@@ -9,7 +7,7 @@ from minecraft_launcher_lib.types import CallbackDict
 from windows.message import messagebox
 
 from lib.minecraft import install_version, is_valid_version
-from lib.helpers import center_window_to_display
+from lib.helpers import center_window_to_display, set_icon
 
 
 def install_window(app):
@@ -95,11 +93,7 @@ def install_window(app):
     window.focus()
     window.grab_set()
 
-    base_path = path.abspath(path.join(path.dirname(__file__), ".."))
-    icon_path = path.join(base_path, "assets/icon.png")
-    icon = PhotoImage(file=icon_path)
-    window.wm_iconbitmap()
-    window.after(300, lambda: window.iconphoto(False, icon))
+    set_icon(window)
 
     # Crear un frame principal para contener todos los elementos
     main_frame = ctk.CTkFrame(window, fg_color="transparent")

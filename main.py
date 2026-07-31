@@ -2,7 +2,6 @@ import argparse
 import asyncio
 import threading
 from os import path
-from tkinter import PhotoImage
 import json
 import logging
 
@@ -12,7 +11,7 @@ from PIL import Image
 
 import lib.variables as app_vars
 from lib.minecraft import get_configs, get_last_version, play_mine, save_configs
-from lib.helpers import center_window_to_display
+from lib.helpers import center_window_to_display, set_icon
 from windows.config import config_window
 from windows.error import error_window
 from windows.install import install_window
@@ -38,11 +37,7 @@ app.title("QwertLauncher")
 app.resizable(False, False)
 app.geometry(center_window_to_display(app, 600, 300, app._get_window_scaling()))
 
-base_path = path.abspath(path.dirname(__file__))
-icon_path = path.join(base_path, "assets", "icon.png")
-icon = PhotoImage(file=icon_path)
-app.wm_iconbitmap()
-app.iconphoto(False, icon)
+set_icon(app)
 
 # Si estamos en modo testing, abrir la consola de debug que captura los prints
 if app_vars.IS_TESTING:

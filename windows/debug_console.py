@@ -2,10 +2,10 @@
 
 import re
 import sys
-from os import path
-from tkinter import PhotoImage
 
 import customtkinter as ctk
+
+from lib.helpers import set_icon
 
 _orig_stdout = sys.stdout
 _orig_stderr = sys.stderr
@@ -30,11 +30,7 @@ class _ConsoleRedirector:
         self.window.lift()
         # self.window.grab_set()
 
-        base_path = path.abspath(path.join(path.dirname(__file__), ".."))
-        icon_path = path.join(base_path, "assets/icon.png")
-        icon = PhotoImage(file=icon_path)
-        self.window.wm_iconbitmap()
-        self.window.after(300, lambda: self.window.iconphoto(False, icon))
+        set_icon(self.window)
 
         self.text = ctk.CTkTextbox(self.window, width=680, height=260)
         self.text.pack(fill="both", expand=True, padx=8, pady=8)

@@ -1,11 +1,9 @@
-from os import path
-from tkinter import PhotoImage
 import logging
 
 import customtkinter as ctk
 
 from lib.minecraft import get_configs, save_configs
-from lib.helpers import center_window_to_display
+from lib.helpers import center_window_to_display, set_icon
 
 
 logger = logging.getLogger("qwertlauncher")
@@ -23,11 +21,7 @@ def config_window(app):
     window.focus()
     window.grab_set()
 
-    base_path = path.abspath(path.join(path.dirname(__file__), ".."))
-    icon_path = path.join(base_path, "assets/icon.png")
-    icon = PhotoImage(file=icon_path)
-    window.wm_iconbitmap()
-    window.after(300, lambda: window.iconphoto(False, icon))
+    set_icon(window)
 
     username, ram = get_configs()
 
