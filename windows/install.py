@@ -37,11 +37,11 @@ def install_window(app):
     def on_download_complete(success, error_msg=None):
         """Callback cuando termina la descarga"""
         if success:
-            messagebox(main_frame, title="Éxito", text="Instalación completada con éxito")
+            window.after(0, lambda: messagebox(main_frame, title="Éxito", text="Instalación completada con éxito"))
             window.after(0, lambda: progress_bar.set(1.0))
         else:
-            messagebox(main_frame, title="Éxito", text=f"Error: {error_msg}")
-            window.after(0, lambda: progress_bar.grid_remove())
+            window.after(0, lambda: messagebox(main_frame, title="Error", text=f"Error: {error_msg}"))
+        window.after(0, lambda: progress_bar.grid_remove())
 
         window.after(0, lambda: install_button.configure(state="normal", text="Descargar versión"))
 
