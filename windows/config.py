@@ -4,6 +4,7 @@ import customtkinter as ctk
 
 from lib.minecraft import get_configs, save_configs
 from lib.helpers import center_window_to_display, set_icon
+from windows.message import messagebox
 
 
 logger = logging.getLogger("qwertlauncher")
@@ -52,9 +53,12 @@ def config_window(app):
     def save_button_click():
         """Qué hacer cuando el botón de guardado es pulsado"""
 
-        logger.info("Configuración guardada")
-        save_configs(nombre=username_input.get(), ram=int(ram_input.get()))
-        window.destroy()
+        if ram_input.get().isdigit():
+            logger.info("Configuración guardada")
+            save_configs(nombre=username_input.get(), ram=int(ram_input.get()))
+            window.destroy()
+        else:
+            messagebox(window, title="Advertencia", text="El campo RAM tiene que ser un número entero")
 
     save_button = ctk.CTkButton(config_frame, text="Guardar", command=save_button_click, height=30, width=120)
     save_button.pack(expand=True, pady=(20, 0))
