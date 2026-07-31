@@ -1,4 +1,5 @@
 import threading
+import logging
 
 import customtkinter as ctk
 import minecraft_launcher_lib as mll
@@ -10,6 +11,9 @@ from lib.minecraft import install_version, is_valid_version
 from lib.helpers import center_window_to_display, set_icon
 
 
+logger = logging.getLogger("qwertlauncher")
+
+
 def install_window(app):
     """Función para crear la ventana de instalaciones"""
 
@@ -18,7 +22,7 @@ def install_window(app):
 
     def set_status(text):
         """Actualiza el texto de estado"""
-        print(text)
+        logger.info(text)
 
     def set_progress(value):
         """Actualiza el valor de la barra de progreso"""
