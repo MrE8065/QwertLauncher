@@ -11,7 +11,7 @@ from PIL import Image
 
 import lib.variables as app_vars
 from lib.minecraft import get_configs, get_last_version, play_mine, save_configs
-from lib.helpers import center_window_to_display, set_icon
+from lib.helpers import center_window_to_display, set_icon, base_path
 from windows.config import config_window
 from windows.error import error_window
 from windows.install import install_window
@@ -135,9 +135,7 @@ else:
 options_frame = ctk.CTkFrame(app, fg_color="transparent")
 options_frame.pack(pady=(0, 10), padx=10, fill="x")
 
-settings = path.abspath(path.dirname(__file__))
-path_to_settings = path.join(settings, "assets/settings_big.png")
-
+path_to_settings = path.join(base_path, "assets", "settings_big.png")
 config_image = ctk.CTkImage(Image.open(path_to_settings), size=(70, 70))
 config_button = ctk.CTkButton(options_frame, text="", image=config_image, anchor="center", command=lambda: config_window(app), height=50, width=50)
 config_button.pack(side="right", padx=10, pady=10)
@@ -145,18 +143,14 @@ config_button.pack(side="right", padx=10, pady=10)
 username_text = ctk.CTkLabel(options_frame, text=f"Jugando como: {username}", font=("Arial", 20))
 username_text.pack(side="left", expand=True)
 
-download = path.abspath(path.dirname(__file__))
-path_to_download = path.join(download, "assets/download_big.png")
-
+path_to_download = path.join(base_path, "assets", "download_big.png")
 install_image = ctk.CTkImage(Image.open(path_to_download), size=(70, 70))
 install_button = ctk.CTkButton(
     options_frame, text="", image=install_image, anchor="center", command=lambda: install_window(app), height=50, width=50
 )
 install_button.pack(side="right", padx=10, pady=10)
 
-instance = path.abspath(path.dirname(__file__))
-path_to_instance = path.join(download, "assets/library_add_big.png")
-
+path_to_instance = path.join(base_path, "assets", "library_add_big.png")
 instance_image = ctk.CTkImage(Image.open(path_to_instance), size=(70, 70))
 instance_button = ctk.CTkButton(
     options_frame, text="", image=instance_image, anchor="center", command=lambda: instance_window(app), height=50, width=50
